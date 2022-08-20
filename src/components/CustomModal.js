@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setQuery, setStopScroll, updatePage } from "../features/contacts/contactsSlice";
+import { setEvenOnly, setQuery, setStopScroll, updatePage } from "../features/contacts/contactsSlice";
 import { modalRoutes } from "../utils";
 import ContactsList from "./ContactsList";
 
@@ -10,6 +10,8 @@ export default function CustomModal({ show, onClose, data, fetchContacts, scroll
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const { evenOnly } = useSelector(state => state.contacts);
+    
     const navigateTo = (route) => {
         dispatch(updatePage(1));
         dispatch(setQuery(''));
@@ -38,7 +40,7 @@ export default function CustomModal({ show, onClose, data, fetchContacts, scroll
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-start">
                     <label>
-                        <input type='checkbox' className="me-2" />
+                        <input type='checkbox' className="me-2" checked={evenOnly} onChange={() => dispatch(setEvenOnly(!evenOnly))} />
                         Even only
                     </label>
                     <Button className="ms-auto" variant="outline-primary" onClick={onClose}>Close</Button>

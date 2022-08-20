@@ -13,7 +13,8 @@ export default function ContactsList({ fetchContacts, scrollbarRef }) {
         (contacts) => contacts?.contacts
       )
     const allContacts = useSelector(memoizingContacts);
-    const { status, stopScroll, query } = useSelector(state => state.contacts)
+    const { status, stopScroll, query, evenOnly } = useSelector(state => state.contacts)
+    const [ updatedContacts, setUpdatedContacts ] = useState(allContacts);
 
     const fetchNextPage = async ({ top }) => {
         if(top === 1 && status==='idle' && !stopScroll) {
@@ -36,10 +37,21 @@ export default function ContactsList({ fetchContacts, scrollbarRef }) {
         fetchQueryContacts();
     }, [query])
 
-    console.log(status, stopScroll, query)
+    useEffect(() => {
+        if(evenOnly) {
+            const updated = {};
+            const filtered = Object.entries(allContacts).filter(([key, value]) => key % 2 === 0);
+            filtered.forEach(([key, value]) => updated[key] = value);
+
+            setUpdatedContacts(updated)
+        }
+        else setUpdatedContacts(allContacts);
+    }, [evenOnly, allContacts])
+
+    // console.log(status, stopScroll, query)
     return(
         <div>
-            <h1>Contacts List ({allContacts ? Object.keys(allContacts)?.length : ""})</h1>
+            <h1>Contacts List ({updatedContacts ? Object.keys(updatedContacts)?.length : 0}/{allContacts ? Object.keys(allContacts)?.length : 0})</h1>
             <div>
                 <input 
                     type='search'
@@ -54,8 +66,8 @@ export default function ContactsList({ fetchContacts, scrollbarRef }) {
                 style={{ height: 300 }}
             >
                 {
-                    allContacts &&
-                    Object.entries(allContacts)?.map(([key, value], i) => (
+                    updatedContacts &&
+                    Object.entries(updatedContacts)?.map(([key, value], i) => (
                         <div key={key}>
                             {i+1}. {value?.id} {value?.email}
                         </div>
