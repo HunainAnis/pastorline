@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setStopScroll, updatePage } from "../features/contacts/contactsSlice";
+import { setQuery, setStopScroll, updatePage } from "../features/contacts/contactsSlice";
 import { modalRoutes } from "../utils";
 import ContactsList from "./ContactsList";
 
@@ -12,6 +12,7 @@ export default function CustomModal({ show, onClose, data, fetchContacts, scroll
 
     const navigateTo = (route) => {
         dispatch(updatePage(1));
+        dispatch(setQuery(''));
         dispatch(setStopScroll(false));
         navigate(route);
     }

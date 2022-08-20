@@ -4,6 +4,7 @@ import { Spinner } from "react-bootstrap";
 import Scrollbars from "react-custom-scrollbars-2";
 import { useDispatch, useSelector } from "react-redux";
 import { resetContacts, setQuery, setStopScroll, updatePage, updateStatus } from "../features/contacts/contactsSlice";
+import { debounce } from "../utils";
 
 export default function ContactsList({ fetchContacts, scrollbarRef }) {
     const dispatch = useDispatch();
@@ -26,10 +27,9 @@ export default function ContactsList({ fetchContacts, scrollbarRef }) {
         dispatch(setStopScroll(false));
         if(query.length>2) {
             dispatch(updateStatus('loading'));
-            setTimeout(() => {
-                fetchContacts();
-            }, 500)
+            debounce(fetchContacts, 500)();
         }
+        if(query.length===0) fetchContacts();
     }
 
     useEffect(() => {
