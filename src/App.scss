@@ -1,3 +1,15 @@
+
+/* make the customizations */
+$theme-colors: (
+    "primary": #46139f,
+    "secondary": #ff7f50,
+    "info": tomato,
+    "danger": teal,
+);
+
+@import "~bootstrap/scss/bootstrap";
+
+
 .App {
   text-align: center;
 }
